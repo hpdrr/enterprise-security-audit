@@ -1,0 +1,22 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor & IDE Directories
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Temporary & Cache Files
+*.log
+*.tmp
+.cache/
+
+# Sensitive & Environment Files
+.env
+.env.*
+*.pem
+*.key

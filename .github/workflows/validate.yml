@@ -1,0 +1,42 @@
+name: Validate Skill
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Validate SKILL.md Frontmatter
+        run: |
+          python -c '
+          import sys
+          with open("SKILL.md", "r", encoding="utf-8") as f:
+              content = f.read()
+          if not content.startswith("---"):
+              sys.exit("Error: SKILL.md must begin with YAML frontmatter delimiters (---)")
+          parts = content.split("---", 2)
+          if len(parts) < 3:
+              sys.exit("Error: SKILL.md missing closing YAML frontmatter delimiter (---)")
+          import yaml
+          data = yaml.safe_load(parts[1])
+          required_fields = ["name", "description", "triggers", "version"]
+          for field in required_fields:
+              if field not in data:
+                  sys.exit(f"Error: Missing required frontmatter field: {field}")
+          print("SKILL.md frontmatter validation passed.")
+          '
